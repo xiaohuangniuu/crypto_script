@@ -3,6 +3,7 @@ package crypto
 import (
 	"bytes"
 	"crypto/ed25519"
+	"crypto/x509"
 	"encoding/pem"
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/btcsuite/btcd/btcutil/hdkeychain"
@@ -75,9 +76,10 @@ func GenerateED22519PrivatePem(mn string, fileName string) error {
 	if err != nil {
 		return err
 	}
+	b, err := x509.MarshalPKCS8PrivateKey(secret)
 	block := &pem.Block{
 		Type:  "PRIVATE KEY",
-		Bytes: secret,
+		Bytes: b,
 	}
 	err = ioutil.WriteFile(fileName, pem.EncodeToMemory(block), 0600)
 	if err != nil {
